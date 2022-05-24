@@ -49,9 +49,38 @@ def calculateEnhanceCost(itemID, initialEnhance, finalEnhance):
     price = getPrice(itemID, initialEnhance) # Price of item at the initialEnhance level
     return(price)
 
-print(getPrice(732313, 20))
 
+def enhanceChance(isAccessory, enhanceLevel, failstack):
+    """Returns the chance of a successful enhance
 
+    Args:
+        isAccessory (bool): If the item is an accessory or not
+        enhanceLevel (int): Enhance level of the item (0-4 for PRI-TET)
+        failstack (int): Number of failstacks
+    """    
+    baseChance = [0.11, 0.0769, 0.0625, 0.02, 0.003]
+    baseSoftcapStacks = [50, 82, 102, 340, 2324]
+    accessoryChance = [0.25, 0.10, 0.075, 0.025, 0.005]
+    accessorySoftcap = [0.7, 0.5, 0.4, 0.3, 0.25]
+    accessorySoftcapStacks = [18, 40, 44, 110, 490]
+    if isAccessory:
+        baseEnhance = accessoryChance[enhanceLevel]
+        softcap = accessorySoftcap[enhanceLevel]
+        if failstack <= accessorySoftcapStacks[enhanceLevel]:
+            chance = baseEnhance * (1 + failstack * 0.1)
+        else:
+            chance = (baseEnhance * (1 + accessorySoftcapStacks[enhanceLevel] * 0.1)) + (baseEnhance * (0.02 * (failstack - accessorySoftcapStacks[enhanceLevel])))
+    else:
+        baseEnhance = baseChance[enhanceLevel]
+        if failstack <= baseSoftcapStacks[enhanceLevel]:
+            chance = baseEnhance * (1 + failstack * 0.1)
+        else:
+            chance = (baseEnhance * (1 + baseSoftcapStacks[enhanceLevel] * 0.1)) + (baseEnhance * (0.02 * (failstack - baseSoftcapStacks[enhanceLevel])))
+    if chance >= 0.9:
+        chance = 0.9
+    return chance
+
+print(enhanceChance(False, 3, 341))
 
 
 
