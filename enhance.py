@@ -33,6 +33,7 @@ def getPrice(itemID, enhanceLevel):
     resp = requests.post(url, headers=headers, data=data)
     parsed_json = json.loads(resp.text)
     priceData = parsed_json['resultMsg']
+    # print(priceData)
     x = priceData.rfind("-")
     latestPrice = priceData[x + 1:len(priceData)]
     return(int(latestPrice))
@@ -80,8 +81,8 @@ def enhanceChance(isAccessory, enhanceLevel, failstack):
         chance = 0.9
     return chance
 
-print(enhanceChance(False, 3, 341))
-
+print(enhanceChance(True, 4, 100))
+# print(calculateEnhanceCost(16005, 0, 1))
 
 
 """
